@@ -10,12 +10,27 @@ def execute_query(sql: str) -> list:
 
 
 sql = """
-SELECT s.id, s.name
-FROM students s
-JOIN groups g ON s.groups_id_fn = g.id
-WHERE g.name = '11COT';
+SELECT s.name, m.value 
+FROM students AS s
+INNER JOIN marks AS m ON m.student_id_fn = s.id
+"""
+sql1 = """
+SELECT name
+FROM students
 """
 
+result = execute_query(sql)
 
-pprint(execute_query(sql))
+students_dict = dict()
+for stud in execute_query(sql1):
+    students_dict[stud[0]] = 0
+
+for i in result:
+    if i[0] in students_dict:
+        students_dict[i[0]] += int(i[1])/20
+
+sort_dict = sorted(students_dict.items(), key=lambda item: item[1], reverse=True)
+
+for i in range(5):
+    pprint(sort_dict[i])
 
